@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- अन्य हेड टैग्स -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <!-- "rzp_live_SovOGYx7d3PPZA" -->
+  
+  <!-- 3EyzXAiDe2ZV92OgsFZCYwsSET -->
+  <script>
+    // function initiatePayment() {
+  // Show payment processing modal
+  document.getElementById('paymentModal').style.display = 'block';
+  document.getElementById('paymentStatus').textContent = 'Connecting to payment gateway...';
+
+  // Generate a random order ID (in production, get this from your backend)
+  const orderId = 'ORD' + Math.floor(Math.random() * 1000000);
+  
+  // Correct Razorpay options
+  const options = {
+    "key": "rzp_live_SovOGYx7d3PPZA", // Your live key
+    "amount": orderData.price * 100, // Amount in paise (₹99 = 9900 paise)
+    "currency": "INR",
+    "name": "Ajay Online Services",
+    "description": orderData.product,
+    "image": "logo.png",
+    "order_id": orderId,
+    "handler": function(response) {
+      // Payment success handler
+      document.getElementById('paymentStatus').textContent = 'Payment successful!';
+      orderData.paymentResponse = response;
+      orderData.paymentStatus = 'success';
+      localStorage.setItem('orderData', JSON.stringify(orderData));
+      
+      setTimeout(function() {
+        document.getElementById('paymentModal').style.display = 'none';
+        showConfirmation(orderId);
+      }, 1000);
+    },
+    "prefill": {
+      "name": orderData.name,
+      "contact": orderData.mobile
+    },
+    "theme": {
+      "color": "#2e7d32"
+    }
+  };
+
+  // Create Razorpay instance
+  const rzp1 = new Razorpay(options);
+  
+  // Handle payment errors
+  rzp1.on('payment.failed', function(response) {
+    document.getElementById('paymentStatus').textContent = 'Payment failed. Please try again.';
+    orderData.paymentResponse = response.error;
+    orderData.paymentStatus = 'failed';
+    localStorage.setItem('orderData', JSON.stringify(orderData));
+    
+    setTimeout(function() {
+      document.getElementById('paymentModal').style.display = 'none';
+      alert('Payment failed: ' + response.error.description);
+    }, 1500);
+  });
+
+  // Open payment dialog
+  rzp1.open();
+}
+    function initiatePayment() {
+      // ... <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aadhar PVC Card - Ajay Online Services</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --primary-dark: #1b5e20;
+      --accent-color: #ffab00;
+      --text-dark: #212121;
+      --text-light: #757575;
+      --background-light: #f5f5f5;
+      --white: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text-dark); line-height: 1.6; background-color: var(--background-light); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    header { background-color: var(--white); box-shadow: var(--shadow); padding: 15px 0; }
+    .logo-container { display: flex; align-items: center; justify-content: center; gap: 15px; }
+    .logo-container img { height: 50px; }
+    .logo-text h1 { font-size: 1.5rem; color: var(--primary-dark); }
+    .logo-text p { font-size: 0.9rem; color: var(--accent-color); font-weight: 600; }
+    .order-container { background-color: var(--white); border-radius: 8px; box-shadow: var(--shadow); padding: 30px; margin-top: 30px; }
+    .service-title { text-align: center; margin-bottom: 20px; color: var(--primary-dark); }
+    .service-title h2 { font-size: 1.8rem; margin-bottom: 10px; }
+    .service-title p { color: var(--text-light); }
+    .price-tag { background-color: var(--primary-color); color: var(--white); padding: 8px 15px; border-radius: 20px; display: inline-block; margin: 15px 0; font-weight: 600; }
+    .upload-section { margin: 25px 0; }
+    .upload-section h3 { margin-bottom: 15px; color: var(--primary-dark); }
+    .file-upload { margin-bottom: 20px; }
+    .file-upload-label { display: block; margin-bottom: 8px; font-weight: 600; }
+    .file-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: var(--background-light); }
+    .preview-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+    .preview-box { border: 2px dashed #ddd; border-radius: 8px; padding: 15px; text-align: center; min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .preview-box img { max-width: 100%; max-height: 150px; margin-top: 10px; display: none; }
+    .preview-title { font-weight: 600; margin-bottom: 10px; }
+    .address-section { margin-top: 30px; }
+    .address-section h3 { margin-bottom: 15px; color: var(--primary-dark); }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+    .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
+    .checkout-btn { background-color: var(--primary-color); color: var(--white); border: none; padding: 12px 25px; font-size: 1.1rem; border-radius: 4px; cursor: pointer; width: 100%; font-weight: 600; transition: var(--transition); margin-top: 20px; }
+    .checkout-btn:hover { background-color: var(--primary-dark); }
+    .error-message { color: #d32f2f; margin-top: 5px; font-size: 0.9rem; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; }
+    .modal-content { background-color: var(--white); margin: 10% auto; padding: 20px; border-radius: 8px; width: 80%; max-width: 500px; }
+    .modal-buttons { display: flex; justify-content: space-between; margin-top: 20px; }
+    .modal-btn { padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+    .modal-btn-primary { background-color: var(--primary-color); color: white; border: none; }
+    .modal-btn-secondary { background-color: #f5f5f5; border: 1px solid #ddd; }
+    .loading-spinner { border: 4px solid rgba(0, 0, 0, 0.1); border-radius: 50%; border-top: 4px solid var(--primary-color); width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 768px) {
+      .preview-section { grid-template-columns: 1fr; }
+      .logo-container { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo-container">
+        <img src="logo.png" alt="Ajay Online Services">
+        <div class="logo-text">
+          <h1>Ajay Online Services</h1>
+          <p>Premium Printing Solutions</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="order-container">
+      <div class="service-title">
+        <h2>Aadhar PVC Card</h2>
+        <p>Get your Aadhar printed on premium PVC with hologram</p>
+        <div class="price-tag">Print + GST = ₹99</div>
+      </div>
+
+      <form id="aadharOrderForm">
+        <div class="upload-section">
+          <h3>Upload Aadhar Card</h3>
+          
+          <div class="file-upload">
+            <label class="file-upload-label">Upload Aadhar Front</label>
+            <input type="file" id="frontUpload" class="file-input" accept="image/*" required>
+            <div id="frontError" class="error-message"></div>
+          </div>
+          
+          <div class="file-upload">
+            <label class="file-upload-label">Upload Aadhar Back</label>
+            <input type="file" id="backUpload" class="file-input" accept="image/*" required>
+            <div id="backError" class="error-message"></div>
+          </div>
+        </div>
+
+        <div class="preview-section">
+          <div class="preview-box">
+            <div class="preview-title">Front Side</div>
+            <div id="frontPreviewText">Upload to view Front Preview</div>
+            <img id="frontPreview" src="" alt="Front Preview">
+          </div>
+          
+          <div class="preview-box">
+            <div class="preview-title">Back Side</div>
+            <div id="backPreviewText">Upload to view Back Preview</div>
+            <img id="backPreview" src="" alt="Back Preview">
+          </div>
+        </div>
+
+        <div class="address-section">
+          <h3>Shipping Address</h3>
+          
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" required>
+            <div id="nameError" class="error-message"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" required>
+            <div id="addressError" class="error-message"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" required>
+            <div id="cityError" class="error-message"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="state">State</label>
+            <input type="text" id="state" required>
+            <div id="stateError" class="error-message"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="pincode">Pincode</label>
+            <input type="text" id="pincode" required pattern="[0-9]{6}" title="6-digit pincode">
+            <div id="pincodeError" class="error-message"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="mobile">Mobile Number</label>
+            <input type="tel" id="mobile" required pattern="[0-9]{10}" title="10-digit mobile number">
+            <div id="mobileError" class="error-message"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Login/Signup Modal -->
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <h2>Login or Create Account</h2>
+      <p>To complete your order, please login or create an account.</p>
+
+      <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required>
+        <div id="emailError" class="error-message"></div>
+      </div>
+      
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required>
+        <div id="passwordError" class="error-message"></div>
+      </div>
+      
+      <div class="modal-buttons">
+        <button id="loginBtn" class="modal-btn modal-btn-primary">Login</button>
+        <button id="signupBtn" class="modal-btn modal-btn-secondary">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Processing Modal -->
+  <div id="paymentModal" class="modal">
+    <div class="modal-content">
+      <h2>Processing Payment</h2>
+      <div class="loading-spinner"></div>
+      <p id="paymentStatus">Connecting to payment gateway...</p>
+    </div>
+  </div>
+
+  <!-- Order Confirmation Modal -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <h2>Order Confirmed!</h2>
+      <p>Your Aadhar PVC Card order has been placed successfully.</p>
+      <p>Order ID: <span id="orderId"></span></p>
+      <p>We'll send you updates on your registered mobile number.</p>
+
+      <div class="modal-buttons">
+        <button id="closeConfirmationBtn" class="modal-btn modal-btn-primary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check if user is logged in (for demo purposes)
+    let isLoggedIn = false;
+    let orderData = null;
+    let razorpayInstance = null;
+
+    // Image preview functionality for front upload
+    document.getElementById('frontUpload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('frontPreview');
+      const previewText = document.getElementById('frontPreviewText');
+      const errorElement = document.getElementById('frontError');
+      
+      if (file) {
+        // Validate file type and size
+        if (!file.type.match('image.*')) {
+          errorElement.textContent = 'Please upload an image file';
+          return;
+        }
+        
+        if (file.size > 2 * 1024 * 1024) { // 2MB limit
+          errorElement.textContent = 'File size should be less than 2MB';
+          return;
+        }
+        
+        errorElement.textContent = '';
+        
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+          preview.src = event.target.result;
+          preview.style.display = 'block';
+          previewText.style.display = 'none';
+        }
+        
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+        previewText.style.display = 'block';
+      }
+    });
+
+    // Image preview functionality for back upload
+    document.getElementById('backUpload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('backPreview');
+      const previewText = document.getElementById('backPreviewText');
+      const errorElement = document.getElementById('backError');
+      
+      if (file) {
+        // Validate file type and size
+        if (!file.type.match('image.*')) {
+          errorElement.textContent = 'Please upload an image file';
+          return;
+        }
+        
+        if (file.size > 2 * 1024 * 1024) { // 2MB limit
+          errorElement.textContent = 'File size should be less than 2MB';
+          return;
+        }
+        
+        errorElement.textContent = '';
+        
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+          preview.src = event.target.result;
+          preview.style.display = 'block';
+          previewText.style.display = 'none';
+        }
+        
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+        previewText.style.display = 'block';
+      }
+    });
+
+    // Form submission
+    document.getElementById('aadharOrderForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Validate form
+      if (!validateForm()) {
+        return;
+      }
+      
+      // Get the uploaded images
+      const frontImage = document.getElementById('frontPreview').src;
+      const backImage = document.getElementById('backPreview').src;
+      
+      // Verify images were uploaded
+      if (!frontImage || !backImage || 
+          frontImage === "" || backImage === "" ||
+          document.getElementById('frontPreview').style.display === 'none' ||
+          document.getElementById('backPreview').style.display === 'none') {
+        alert('Please upload both front and back images of your Aadhar card');
+        return;
+      }
+      
+      // Get form data
+      orderData = {
+        product: 'Aadhar PVC Card',
+        price: 99,
+        frontImage: frontImage,
+        backImage: backImage,
+        name: document.getElementById('fullName').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        pincode: document.getElementById('pincode').value,
+        mobile: document.getElementById('mobile').value,
+        timestamp: new Date().getTime()
+      };
+      
+      // Store data temporarily
+      localStorage.setItem('orderData', JSON.stringify(orderData));
+      
+      // Check if user is logged in
+      if (!isLoggedIn) {
+        // Show login/signup modal
+        document.getElementById('authModal').style.display = 'block';
+      } else {
+        // Proceed directly to payment
+        initiatePayment();
+      }
+    });
+
+    // Validate form function
+    function validateForm() {
+      let isValid = true;
+      
+      // Validate name
+      const name = document.getElementById('fullName').value;
+      if (!name || name.trim() === '') {
+        document.getElementById('nameError').textContent = 'Please enter your full name';
+        isValid = false;
+      } else {
+        document.getElementById('nameError').textContent = '';
+      }
+      
+      // Validate address
+      const address = document.getElementById('address').value;
+      if (!address || address.trim() === '') {
+        document.getElementById('addressError').textContent = 'Please enter your address';
+        isValid = false;
+      } else {
+        document.getElementById('addressError').textContent = '';
+      }
+      
+      // Validate city
+      const city = document.getElementById('city').value;
+      if (!city || city.trim() === '') {
+        document.getElementById('cityError').textContent = 'Please enter your city';
+        isValid = false;
+      } else {
+        document.getElementById('cityError').textContent = '';
+      }
+      
+      // Validate state
+      const state = document.getElementById('state').value;
+      if (!state || state.trim() === '') {
+        document.getElementById('stateError').textContent = 'Please enter your state';
+        isValid = false;
+      } else {
+        document.getElementById('stateError').textContent = '';
+      }
+      
+      // Validate pincode
+      const pincode = document.getElementById('pincode').value;
+      if (!pincode || !/^\d{6}$/.test(pincode)) {
+        document.getElementById('pincodeError').textContent = 'Please enter a valid 6-digit pincode';
+        isValid = false;
+      } else {
+        document.getElementById('pincodeError').textContent = '';
+      }
+      
+      // Validate mobile
+      const mobile = document.getElementById('mobile').value;
+      if (!mobile || !/^\d{10}$/.test(mobile)) {
+        document.getElementById('mobileError').textContent = 'Please enter a valid 10-digit mobile number';
+        isValid = false;
+      } else {
+        document.getElementById('mobileError').textContent = '';
+      }
+      
+      return isValid;
+    }
+
+    // Login button click handler
+    document.getElementById('loginBtn').addEventListener('click', function() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      if (!email || !password) {
+        alert('Please enter both email and password');
+        return;
+      }
+      
+      // In a real app, you would verify credentials with server
+      isLoggedIn = true;
+      document.getElementById('authModal').style.display = 'none';
+      initiatePayment();
+    });
+    
+    // Signup button click handler
+    document.getElementById('signupBtn').addEventListener('click', function() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      if (!email || !password) {
+        alert('Please enter both email and password');
+        return;
+      }
+      
+      // In a real app, you would create a new account
+      isLoggedIn = true;
+      document.getElementById('authModal').style.display = 'none';
+      initiatePayment();
+    });
+    
+    // Initiate payment process
+    function initiatePayment() {
+      // Show payment processing modal
+      document.getElementById('paymentModal').style.display = 'block';
+      document.getElementById('paymentStatus').textContent = 'Connecting to payment gateway...';
+      
+      // Generate a random order ID (in production, get this from your backend)
+      const orderId = 'ORD' + Math.floor(Math.random() * 1000000);
+      
+      // Razorpay options
+      const options = {
+        "key": "rzp_live_SovOGYx7d3PPZA", // Replace with your actual Razorpay Test Key ID
+        "amount": orderData.price * 100, // Amount in paise (₹99 = 9900 paise)
+        "currency": "INR",
+        "name": "Ajay Online Services",
+        "description": orderData.product,
+        "image": "logo.png",
+        "order_id": orderId, // This should come from your backend in production
+        "handler": function(response) {
+          // Payment success handler
+          document.getElementById('paymentStatus').textContent = 'Payment successful!';
+          
+          // Store payment response
+          orderData.paymentResponse = response;
+          orderData.paymentStatus = 'success';
+          localStorage.setItem('orderData', JSON.stringify(orderData));
+          
+          setTimeout(function() {
+            document.getElementById('paymentModal').style.display = 'none';
+            showConfirmation(orderId);
+          }, 1000);
+        },
+        "prefill": {
+          "name": orderData.name,
+          "email": "", // You can collect email in your form if needed
+          "contact": orderData.mobile
+        },
+        "theme": {
+          "color": "#2e7d32"
+        },
+        "modal": {
+          "ondismiss": function() {
+            // Handle when user closes the payment form
+            document.getElementById('paymentModal').style.display = 'none';
+            alert('Payment was cancelled. Please try again if you want to complete your order.');
+          }
+        }
+      };
+      
+      // Create Razorpay instance
+      razorpayInstance = new Razorpay(options);
+      
+      // Open payment dialog
+      razorpayInstance.open();
+      
+      // Handle payment errors
+      razorpayInstance.on('payment.failed', function(response) {
+        document.getElementById('paymentStatus').textContent = 'Payment failed. Please try again.';
+        
+        // Store payment failure
+        orderData.paymentResponse = response.error;
+        orderData.paymentStatus = 'failed';
+        localStorage.setItem('orderData', JSON.stringify(orderData));
+        
+        setTimeout(function() {
+          document.getElementById('paymentModal').style.display = 'none';
+          alert('Payment failed: ' + response.error.description);
+        }, 1500);
+      });
+    }
+    
+    // Show confirmation modal
+    function showConfirmation(orderId) {
+      document.getElementById('orderId').textContent = orderId;
+      document.getElementById('confirmationModal').style.display = 'block';
+      
+      // In a real app, you would send the order data to your backend here
+      console.log('Order completed:', JSON.parse(localStorage.getItem('orderData')));
+    }
+    
+    // Close confirmation button click handler
+    document.getElementById('closeConfirmationBtn').addEventListener('click', function() {
+      document.getElementById('confirmationModal').style.display = 'none';
+      
+      // Clear the order data from localStorage
+      localStorage.removeItem('orderData');
+      
+      // In a real app, you would redirect to order history or home page
+      alert('Thank you for your order! Your Aadhar PVC Card will be processed soon.');
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+      if (event.target.className === 'modal') {
+        event.target.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html> ...
+    }
+  </script>
+</body>
+</html>
+<?php
+require('razorpay-php/Razorpay.php');
+use Razorpay\Api\Api;
+
+$api = new Api("rzp_live_SovOGYx7d3PPZA", '3EyzXAiDe2ZV92OgsFZCYwsSET');
+
+$orderData = [
+    'receipt' => 'rcpt_'.time(),
+    'amount' => 9900, // पैसे में (₹99 = 9900 पैसे)
+    'currency' => 'INR',
+    'payment_capture' => 1
+];
+
+$razorpayOrder = $api->order->create($orderData);
+echo json_encode(['id' => $razorpayOrder['id']]);
+?>

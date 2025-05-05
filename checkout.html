@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Payment - Ajay Online Services</title>
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --primary-dark: #1b5e20;
+      --accent-color: #ffab00;
+      --text-dark: #212121;
+      --text-light: #757575;
+      --background-light: #f5f5f5;
+      --white: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text-dark); line-height: 1.6; background-color: var(--background-light); }
+    .container { max-width: 600px; margin: 50px auto; padding: 20px; }
+    .payment-container { background-color: var(--white); border-radius: 8px; box-shadow: var(--shadow); padding: 30px; }
+    .payment-header { text-align: center; margin-bottom: 30px; }
+    .payment-header h2 { color: var(--primary-dark); margin-bottom: 10px; }
+    .payment-amount { font-size: 1.5rem; font-weight: bold; margin: 20px 0; text-align: center; }
+    .payment-btn { background-color: var(--primary-color); color: var(--white); border: none; padding: 12px 25px; font-size: 1.1rem; border-radius: 4px; cursor: pointer; width: 100%; font-weight: 600; transition: var(--transition); margin-top: 20px; }
+    .payment-btn:hover { background-color: var(--primary-dark); }
+    .loading { display: none; text-align: center; margin: 20px 0; }
+    .order-details { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+    .detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .detail-label { font-weight: bold; color: var(--text-light); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="payment-container">
+      <div class="payment-header">
+        <h2>Complete Your Payment</h2>
+        <p>Secure payment powered by Razorpay</p>
+      </div>
+
+      <div class="payment-amount" id="paymentAmount">
+        <!-- Amount will be filled by JavaScript -->
+      </div>
+
+      <div class="loading" id="loading">
+        <p>Processing payment...</p>
+      </div>
+
+      <button id="rzp-button" class="payment-btn">Pay Now</button>
+
+      <div class="order-details" id="orderDetails">
+        <!-- Order details will be filled by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Razorpay checkout script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get order data from URL parameters or localStorage
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderData = JSON.parse(localStorage.getItem('orderData')) || {
+        product: urlParams.get('product') || 'Aadhar PVC Card',
+        price: parseFloat(urlParams.get('price')) || 99,
+        name: urlParams.get('name') || '',
+        mobile: urlParams.get('mobile') || ''
+      };
+
+      // Display order details
+      document.getElementById('paymentAmount').textContent = `Amount to Pay: ₹${orderData.price}`;
+      
+      const orderDetailsHtml = `
+        <div class="detail-row">
+          <span class="detail-label">Product:</span>
+          <span>${orderData.product}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Customer Name:</span>
+          <span>${orderData.name || 'Not provided'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Mobile:</span>
+          <span>${orderData.mobile || 'Not provided'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Order ID:</span>
+          <span>${'ORD' + Date.now().toString().slice(-8)}</span>
+        </div>
+      `;
+      document.getElementById('orderDetails').innerHTML = orderDetailsHtml;
+
+      // Razorpay payment handler
+      document.getElementById('rzp-button').onclick = function(e) {
+        e.preventDefault();
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('rzp-button').style.display = 'none';
+
+        // In production, you should call your backend to create an order
+        // For demo, we'll use test credentials directly (not recommended for production)
+        const options = {
+          key: 'rzp_test_YOUR_TEST_KEY', // Replace with your test key
+          amount: orderData.price * 100, // Amount in paise
+          currency: 'INR',
+          name: 'Ajay Online Services',
+          description: orderData.product,
+          image: 'logo.png',
+          order_id: '', // Leave empty for demo, in production get from your backend
+          handler: function(response) {
+            // This function runs after successful payment
+            alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
+            
+            // In production, verify payment signature on your backend
+            // Then redirect to success page
+            window.location.href = 'order-success.html?payment_id=' + response.razorpay_payment_id;
+          },
+          prefill: {
+            name: orderData.name || '',
+            contact: orderData.mobile || '',
+            email: 'customer@example.com' // You should collect email in your form
+          },
+          notes: {
+            product: orderData.product,
+            address: orderData.address || ''
+          },
+          theme: {
+            color: '#2e7d32' // Match your brand color
+          }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+        
+        rzp.on('payment.failed', function(response) {
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('rzp-button').style.display = 'block';
+          alert('Payment failed. Please try again. Error: ' + response.error.description);
+        });
+      };
+    });
+  </script>
+</body>
+</html>

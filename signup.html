@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - Ajay Online Services</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #eef2f3, #8e9eab);
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #ffffff;
+      padding: 10px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      border-bottom: 2px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      flex: 1;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-left: 10px;
+    }
+
+    .logo img {
+      height: 65px;
+      max-width: 100%;
+    }
+
+    nav {
+      flex: 2;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 16px;
+      position: relative;
+      padding: 4px 6px;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      background-color: #007BFF;
+      bottom: 0;
+      left: 0;
+      transition: 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    nav a:hover {
+      color: #007BFF;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      border-radius: 16px;
+      padding: 2px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .form-box {
+      background: white;
+      padding: 35px 30px;
+      border-radius: 14px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2c3e50;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #36d1dc, #5b86e5);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #5b86e5, #36d1dc);
+    }
+
+    .login-link {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .login-link a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <a href="index.html">
+      <img src="Logo.png" alt="Ajay Online Services Logo">
+    </a>
+  </div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About Us</a>
+    <a href="orders.html">Orders</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html">Login</a>
+    <a href="signup.html">Signup</a>
+  </nav>
+</header>
+
+<!-- Signup Form -->
+<div class="container">
+  <div class="form-box">
+    <h2>Create Your Account</h2>
+    <form id="signupForm">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required placeholder="Enter your email">
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required placeholder="Enter your password">
+
+      <label for="confirm-password">Confirm Password</label>
+      <input type="password" id="confirm-password" name="confirm-password" required placeholder="Confirm your password">
+
+      <button type="submit">Sign Up</button>
+    </form>
+
+    <div class="login-link">
+      Already have an account? <a href="login.html">Sign In</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("signupForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const confirm = document.getElementById("confirm-password").value.trim();
+
+    if (password !== confirm) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return;
+    }
+
+    // Save user data (you can store in localStorage or send to server here)
+    alert("Account created successfully!");
+    document.getElementById("signupForm").reset();
+  });
+</script>
+
+</body>
+</html>

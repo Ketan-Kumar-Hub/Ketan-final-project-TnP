@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aadhar PVC Card - Ajay Online Services</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    /* All your existing CSS styles */
+  </style>
+</head>
+<body>
+  <!-- Your existing HTML structure -->
+
+  <script>
+    // Fixed Razorpay integration
+    const RAZORPAY_KEY_ID = 'rrzp_live_SovOGYx7d3PPZA'; // Your Razorpay Live Key
+    
+    document.getElementById('aadharOrderForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Validate form
+      if (!validateForm()) {
+        alert('Please fill all fields correctly');
+        return;
+      }
+
+      // Prepare order data
+      const orderData = {
+        product: 'Aadhar PVC Card',
+        amount: 99 * 100, // ₹99 in paise
+        currency: 'INR',
+        customer_name: document.getElementById('fullName').value,
+        customer_mobile: document.getElementById('mobile').value,
+        customer_email: '', // Add if you collect email
+        timestamp: Date.now()
+      };
+
+      // Show loading
+      const paymentModal = document.getElementById('paymentModal');
+      const paymentStatus = document.getElementById('paymentStatus');
+      paymentModal.style.display = 'block';
+      paymentStatus.textContent = 'Initializing payment...';
+
+      try {
+        // In production: First call your backend to create order
+        // For demo, we'll use direct client-side integration
+        paymentStatus.textContent = 'Creating payment request...';
+        
+        const options = {
+          key: RAZORPAY_KEY_ID,rzp_live_SovOGYx7d3PPZA
+          amount: orderData.amount,
+          currency: orderData.currency,
+          name: "Ajay Online Services",
+          description: orderData.product,
+          image: "logo.png",
+          order_id: 'order_' + Date.now(), // Unique order ID
+          handler: function(response) {
+            paymentStatus.textContent = 'Verifying payment...';
+            
+            // In production: Verify payment signature with backend
+            setTimeout(() => {
+              paymentModal.style.display = 'none';
+              
+              // Store payment details
+              localStorage.setItem('lastOrder', JSON.stringify({
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                amount: orderData.amount,
+                status: 'success',
+                timestamp: new Date().toISOString()
+              }));
+              
+              // Show confirmation
+              document.getElementById('orderId').textContent = response.razorpay_order_id;
+              document.getElementById('confirmationModal').style.display = 'block';
+            }, 1500);
+          },
+          prefill: {
+            name: orderData.customer_name,
+            contact: orderData.customer_mobile,
+            email: orderData.customer_email
+          },
+          theme: {
+            color: "#2e7d32"
+          },
+          modal: {
+            ondismiss: function() {
+              paymentModal.style.display = 'none';
+              alert('Payment was cancelled. Please try again.');
+            }
+          }
+        };
+
+        const rzp = new Razorpay(options);
+        
+        rzp.on('payment.failed', function(response) {
+          console.error('Payment failed:', response.error);
+          paymentModal.style.display = 'none';
+          // razorpay.me/
+          // @ajaykumarvishwakarma7152
+          let errorMsg = 'Payment failed. ';
+          if (response.error.description) {
+            errorMsg += response.error.description;
+          } else if (response.error.code === 'BAD_REQUEST_ERROR') {
+            errorMsg += 'Invalid payment details.';
+          } else {
+            errorMsg += 'Please try again.';
+          }
+          
+          alert(errorMsg);
+        });
+
+        rzp.open();
+
+      } catch (error) {
+        console.error('Payment initialization error:', error);
+        paymentModal.style.display = 'none';
+        alert('Error processing payment. Please try again later.');
+      }
+    });
+
+    // Form validation function
+    function validateForm() {
+      let isValid = true;
+      
+      // Validate all required fields
+      const requiredFields = ['fullName', 'address', 'city', 'state', 'pincode', 'mobile'];
+      
+      requiredFields.forEach(field => {
+        const value = document.getElementById(field).value.trim();
+        if (!value) {
+          document.getElementById(field + 'Error').textContent = 'This field is required';
+          isValid = false;
+        } else {
+          document.getElementById(field + 'Error').textContent = '';
+        }
+      });
+      
+      // Validate pincode format
+      const pincode = document.getElementById('pincode').value;
+      if (!/^\d{6}$/.test(pincode)) {
+        document.getElementById('pincodeError').textContent = 'Invalid pincode (must be 6 digits)';
+        isValid = false;
+      }
+      
+      // Validate mobile format
+      const mobile = document.getElementById('mobile').value;
+      if (!/^\d{10}$/.test(mobile)) {
+        document.getElementById('mobileError').textContent = 'Invalid mobile number (must be 10 digits)';
+        isValid = false;
+      }
+      
+      return isValid;
+    }
+
+    // Close confirmation modal
+    document.getElementById('closeConfirmationBtn').addEventListener('click', function() {
+      document.getElementById('confirmationModal').style.display = 'none';
+    });
+  </script>
+</body>
+</html>
