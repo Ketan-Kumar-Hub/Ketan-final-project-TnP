@@ -7,7 +7,7 @@ Online Services Website
 A professional and responsive website that offers online services like PVC card printing, ID card generation, and more.
 
 ## How to Run:
-1. Clone this repo or download ZIP
+1. Clone this repo or download (_public_html.zip)
 2. Open `index.html` in any browser
 
 ## Technologies Used:
